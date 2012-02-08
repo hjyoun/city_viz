@@ -1,0 +1,5 @@
+{"type":"FeatureCollection", "features":[
+{"type":"Feature","id":"1","geometry":{"type":"Point","coordinates":[-103.228,44.076]},"properties":{"name":"Rapid City, SD","population": 115285.0}},
+{"type":"Feature","id":"2","geometry":{"type":"Point","coordinates":[-84.30,29.8]},"properties":{"name":"Cincinnati-Middletown, OH-KY-IN","population": 2050677.0}},
+{"type":"Feature","id":"3","geometry":{"type":"Point","coordinates":[-122.17,38.18]},"properties":{"name":"Napa, CA","population": 128858.0}}
+]}

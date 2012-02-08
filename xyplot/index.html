@@ -1,0 +1,182 @@
+<html>
+  <head>
+    <script type="text/javascript" src="../d3/d3.js"></script>
+
+<style type="text/css">
+  #viz{
+    border: 1px solid #ccc;
+  }
+
+  #scalingform {
+    font-size:2em;
+    position:absolute;
+    left:500px;
+    top:300px;
+  }
+</style>
+
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+
+  </head>
+
+  <body>
+    <h1>XY plot test. </h1>
+
+    <div id="scalingform">
+    $$y \sim x^{1.0} $$
+    </div>
+
+    <div id="viz"></div>
+
+<script type='text/javascript'>
+
+  var msadata; 
+
+  var w = 500,
+      h = 400,
+      p = 100,
+      x = d3.scale.log().domain([10000,100000000]).range([0, w]),
+      y = d3.scale.log().domain([10,1000000]).range([h, 0]);
+    
+  var chart = d3.select("#viz")
+    .append("svg:svg")
+    .attr("class", "chart")
+    .attr("width", w + 2*p)
+    .attr("height", h + 2*p);
+
+  var vis = chart.append("svg:g")
+    .attr("transform", "translate(" + p + "," + p + ")");
+
+  var xrule = vis.selectAll("g.x")
+    .data(x.ticks(10))
+    .enter().append("svg:g")
+    .attr("class", "x");
+
+  xrule.append("svg:line")
+    .style("stroke", "#ccc")
+    .style("shape-rendering", "crispEdges")
+    .attr("x1", x)
+    .attr("x2", x)
+    .attr("y1", 0)
+    .attr("y2", h);
+
+  xrule.append("svg:text")
+    .attr("x", x)
+    .attr("y", h + 3)
+    .attr("dy", ".71em")
+    .attr("text-anchor", "middle")
+    .text(x.tickFormat("5"));
+
+  var yrule = vis.selectAll("g.y")
+    .data(y.ticks(10))
+    .enter().append("svg:g")
+    .attr("class", "y");
+
+  yrule.append("svg:line")
+    .attr("class", "yLine")
+    .style("stroke", "#ccc")
+    .style("shape-rendering", "crispEdges")
+    .attr("x1", 0)
+    .attr("x2", w)
+    .attr("y1", y)
+    .attr("y2", y);
+
+  yrule.append("svg:text")
+    .attr("class", "yText")
+    .attr("x", -3)
+    .attr("y", y)
+    .attr("dy", ".35em")
+    .attr("text-anchor", "end")
+    .text(y.tickFormat(5));
+
+  // ylabel
+  var ylabel = vis.append("svg:text")
+								.attr("text-anchor", "end")
+								.attr("font-size", "20")
+								.attr("transform", "translate(-50," + h/2 + "), rotate(270)")
+								.text("Crime");
+  
+  // xlabel
+  vis.append("svg:text")
+    .attr("text-anchor", "end")
+    .attr("font-size", "20")
+    .attr("transform", "translate(" + (p+w)/2 + "," + (h+p/2) + ")")
+    .text("Population");
+    
+  vis.append("svg:line")
+    .attr("stroke", "#888")
+    .attr("x1", x(40000))
+    .attr("y1", y(100))
+    .attr("x2", x(4000000))
+    .attr("y2", y(10000));
+		
+	var points = vis.append("svg:g");
+
+	function init_drawplot( datax, datay ){
+			points.selectAll("circle")
+			.data(msadata.FIPS)
+			.enter().append("svg:circle")
+			.attr("cx", function(d, i) { return x(datax[i]); })
+			.attr("cy", function(d, i) { return y(datay[i]);})
+			.attr("class", function(d) {return d;})
+			.attr("r" , function(d, i) { 
+								if (isNaN(datay[i])) { return 0; } else { return 5; }})
+			.attr("stroke-width", 0)
+			.attr("stroke", "black")
+			.attr("fill", "#f82983")
+			.attr("fill-opacity", .2);
+	}
+
+	function drawplot( datax, datay ){
+			points.selectAll("circle")
+			.transition(100)
+			.attr("cx", function(d, i) { return x(datax[i]); })
+			.attr("cy", function(d, i) { return y(datay[i]);})
+			.attr("class", function(d) {return d;})
+			.attr("r" , function(d, i) { 
+								if (isNaN(datay[i])) { return 0; } else { return 5; }})
+			.attr("stroke-width", 0)
+			.attr("stroke", "black")
+			.attr("fill", "#f82983")
+			.attr("fill-opacity", .2);
+	}
+
+	vis.append("svg:text")
+		.attr("text-anchor", "top")
+    .attr("transform", "translate( 10,20)")
+		.text("click crime")
+		.on("mouseover", build_app1);
+
+	vis.append("svg:text")
+		.attr("text-anchor", "top")
+    .attr("transform", "translate( 10,40)")
+		.text("click income")
+		.on("mouseover", build_app2);
+
+	d3.json("../UrbanScaling/data/msa2005.json", function(json) { 
+		msadata = json; 
+		init_drawplot( msadata.population, msadata.crime ); } )
+
+	function build_app1() {
+			drawplot( msadata.population, msadata.crime );
+			ylabel.text("Crime");
+      y = d3.scale.log().domain([10,1000000]).range([h, 0]);
+			yrule.data(y.ticks(10));
+  }
+	function build_app2() {
+			drawplot( msadata.population, msadata.income );
+			ylabel.text("Income");
+      y = d3.scale.log().domain([d3.min(msadata.income)*0.1,d3.max(msadata.income)*100]).range([h, 0]);
+			yrule.data(y.ticks(10));
+  }
+
+</script>
+
+</body>
+</html>
