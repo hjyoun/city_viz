@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>U.S. CO2 emission by County</title>
+    <script type="text/javascript" src="../d3/d3.js"></script>
+    <script type="text/javascript" src="../d3/d3.geo.js"></script>
+    <link type="text/css" rel="stylesheet" href="choropleth.css"/>
+    <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
+  </head>
+	<style> @import url("../style.css?1.10.0"); </style>
+	</head>
+<body>
+	<div class="body">
+	<div class="content">
+		<div class="topbar">
+			<a href="./vulcan_county_total.html">Vulcan_total (county)</a>
+			<a href="./vulcan_county_res.html">Vulcan_residential (county)</a>
+			<a href="./vulcan_county_res_NYC.html">Vulcan_residential (NYC)</a>
+			<a href="./vulcan_county_trans.html">Vulcan_transportation (county)</a>
+			<a href="./vulcan_msa_total.html">Vulcan total (MSA)</a>
+		</div>
+
+		<div class="sidebar"> Total CO2 of Vulcan </div>
+
+		<h1> This is CO2 emission of Vulcan at county level </h1>
+    <div id="chart"></div>
+			<h2> Put the mouse over a county to see the name and value of county </h2>
+    <div id="info">
+			Here is information:
+		</div>
+    <script type="text/javascript">
+			var dataco2; // loaded asynchronously
+			var dataname; // loaded asynchronously
+
+			var path = d3.geo.path();
+
+			var infosvg = d3.select("#info")
+				.append("svg:svg")
+				.attr("width", "10cm")
+				.attr("height", "10cm");
+
+			var infotext = infosvg.append("svg:text")
+				.attr("x", "20")
+				.attr("y", "20")
+				.attr("text-anchor", "start");
+				//.text("Hello");
+
+			var svg = d3.select("#chart")
+				.append("svg:svg");
+
+			var counties = svg.append("svg:g")
+			.attr("id", "counties")
+			.attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
+
+			var states = svg.append("svg:g")
+			.attr("id", "states");
+
+			d3.json("../usa_geo/us-counties.json", function(json) {
+			counties.selectAll("path")
+			.data(json.features)
+			.enter().append("svg:path")
+			.attr("class", dataco2 ? quantize : null)
+			.attr("d", path)
+			.on("mouseover", mouseover );
+			});
+
+			d3.json("../usa_geo/us-states.json", function(json) {
+			states.selectAll("path")
+			.data(json.features)
+			.enter().append("svg:path")
+			.attr("d", path);
+			});
+
+			d3.json("vulcan_total_county.json", function(json) { dataco2 = json; });
+			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
+
+			function mouseover(d, i) {
+				//d3.select(this).style("fill", "white");
+				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
+				infotext.text("This is hopefully CO2 of "+dataco2[d.id]+" = "+dataco2[d.id]);
+			}
+
+			function quantize(d) {
+			return "q" + Math.min(8, ~~(dataco2[d.id] * 9 / 7)) + "-9";
+			}
+		
+		</script>
+  </body>
+</html>

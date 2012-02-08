@@ -20,7 +20,7 @@ var force = d3.layout.force()
 //{"type":"FeatureCollection", "features":[
 //{"type":"Feature","id":"1","geometry":{"type":"Point","coordinates":[-103.228,44.076]},"properties":{"name":"Rapid City, SD","population": 115285.0}},
 
-d3.json("../usa_geo/us-msa-centroids2.json", function(mm) {
+d3.json("../usa_geo/us-msa-centroids.json", function(mm) {
   var project = d3.geo.albersUsa(),
       idToNode = {},
       links = [],
@@ -30,7 +30,7 @@ d3.json("../usa_geo/us-msa-centroids2.json", function(mm) {
       x: xy[0],
       y: xy[1],
       gravity: {x: xy[0], y: xy[1]},
-      r: Math.sqrt(datamsa[d.id] * 0.0002),
+      r: Math.sqrt(datamsa[d.id] * 0.00002),
       value: datamsa[d.id],
 			name: d.properties.name
     };
