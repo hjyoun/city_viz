@@ -33,6 +33,9 @@
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
 
+			d3.json("vulcan_total_county.json", function(json) { dataco2 = json; });
+			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
+
 			var path = d3.geo.path();
 
 			var infosvg = d3.select("#info")
@@ -62,9 +65,9 @@
 			.enter().append("svg:path")
 			.attr("class", dataco2 ? quantize : null)
 			.attr("d", path)
-            .attr("title", function(d, i) { return d; });
-            //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
-			//.on("mouseover", mouseover );
+            .attr("title", function(d, i) { return d.id; })
+                        //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
+			.on("mouseover", mouseover );
 			});
             //$("#counties path[title]").tooltip();
 
@@ -74,9 +77,6 @@
 			.enter().append("svg:path")
 			.attr("d", path);
 			});
-
-			d3.json("vulcan_total_county.json", function(json) { dataco2 = json; });
-			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
 
 			function mouseover(d, i) {
