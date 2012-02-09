@@ -27,8 +27,9 @@
 
         <div class="sidebar"> Total CO2 of Vulcan </div>
 
-		<h1> This is CO2 emission of Vulcan at county level </h1>
+		<h1 align="center"> CO2 emission of Vulcan at county level </h1>
         <div id="chart"> </div>
+        <div id="info"> </div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
@@ -41,18 +42,8 @@
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
-            var infobox = svg.append("svg:g");
-              infobox.append("rect")
-                .attr("x", 100)
-                .attr("y", 500)
-                .attr("width", 1000)
-                .attr("hight", 1000)
-                .attr("fill", "blue")
-                .attr("stroke-width", 10)
-                .attr("stroke", "blue");
-
             var infotext = svg.append("svg:text")
-				.attr("x", "100")
+				.attr("x", "220")
 				.attr("y", "495")
                 .attr("font-family", "Verdana")
                 .attr("font-size", "21")
@@ -65,6 +56,13 @@
 			var states = svg.append("svg:g")
 			.attr("id", "states");
 
+			d3.json("../usa_geo/us-states.json", function(json) {
+			states.selectAll("path")
+			.data(json.features)
+			.enter().append("svg:path")
+			.attr("d", path);
+			});
+
 			d3.json("../usa_geo/us-counties.json", function(json) {
 			counties.selectAll("path")
 			.data(json.features)
@@ -76,12 +74,6 @@
 			});
 
 
-			d3.json("../usa_geo/us-states.json", function(json) {
-			states.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("d", path);
-			});
 
      // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
  $(document).ready(function()
@@ -93,9 +85,8 @@
      });
 
 			function mouseover(d, i) {
-				//d3.select(this).style("fill", "white");
-				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-				infotext.text("CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
+				//d3.select(this).style("fill", "blue");
+				infotext.text(dataname[d.id]+": "+dataco2[d.id]+" Tons");
 			}
 
 			function quantize(d) {

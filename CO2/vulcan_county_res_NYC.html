@@ -27,31 +27,24 @@
 
 		<div class="sidebar"> Total CO2 of Vulcan </div>
 
-		<h1> This is CO2 emission of Vulcan at NY MSA</h1>
+		<h1> CO2 emission of NYC</h1>
     <div id="chart"></div>
-			<h2> Put the mouse over a county to see the name and value of county </h2>
-    <div id="info">
-			Here is information:
-		</div>
+    <div id="info"> </div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
 
 			var path = d3.geo.path();
-
-			var infosvg = d3.select("#info")
-				.append("svg:svg")
-				.attr("width", "10cm")
-				.attr("height", "10cm");
-
-			var infotext = infosvg.append("svg:text")
-				.attr("x", "20")
-				.attr("y", "20")
-				.attr("text-anchor", "start");
-				//.text("Hello");
-
+            
 			var svg = d3.select("#chart")
 				.append("svg:svg");
+
+            var infotext = svg.append("svg:text")
+				.attr("x", "270")
+				.attr("y", "240")
+                .attr("font-family", "Verdana")
+                .attr("font-size", "21")
+                .attr("text-anchor", "start");
 
 			var counties = svg.append("svg:g")
 			.attr("id", "counties")
@@ -65,17 +58,15 @@
               .attr("d", path)
               .attr("title", function(d, i) { return d.id; })
               .attr("transform", "scale(1)translate(1,1)")
-              .append("svg:text").attr("x", "20").attr("y", "20").attr("text-anchor","start").text("Hello");
-              //.on("mouseover", mouseover );
+              .on("mouseover", mouseover );
 			});
-            
-          
+
             d3.json("vulcan_total_county.json", function(json) { 
                 dataco2 = json; 
                 counties.selectAll("path").transition()
                         .duration(300)
-                        .attr("class", dataco2 ? quantize : "q3-9")
-                        .attr("transform", "scale(7)translate(-730,-130)");
+                        .attr("class", dataco2 ? quantize : null)
+                        .attr("transform", "scale(7)translate(-760,-140)");
             });
 			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
@@ -88,9 +79,7 @@
 
 			function mouseover(d, i) {
 				//d3.select(this).style("fill", "white");
-				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-				d3.select(this).text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-                
+				infotext.text(dataname[d.id]+": "+dataco2[d.id]+" Tons");
 			}
 
 			function quantize(d) {
