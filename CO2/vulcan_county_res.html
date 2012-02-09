@@ -41,12 +41,14 @@
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
-            var infobox = svg.append("svg:rect")
+            var infobox = svg.append("svg:g");
+              infobox.append("rect")
                 .attr("x", 100)
                 .attr("y", 500)
                 .attr("width", 1000)
                 .attr("hight", 1000)
                 .attr("fill", "blue")
+                .attr("stroke-width", 10)
                 .attr("stroke", "blue");
 
             var infotext = svg.append("svg:text")
