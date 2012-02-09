@@ -5,8 +5,12 @@
     <title>U.S. CO2 emission by County</title>
     <script type="text/javascript" src="../d3/d3.js"></script>
     <script type="text/javascript" src="../d3/d3.geo.js"></script>
+    <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
     <link type="text/css" rel="stylesheet" href="choropleth.css"/>
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
+    <script type="text/javascript" src="../qtip/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="../qtip/jquery.qtip.js"></script>
   </head>
 	<style> @import url("../style.css?1.10.0"); </style>
 	</head>
@@ -21,7 +25,13 @@
 			<a href="./vulcan_msa_total.html">Vulcan total (MSA)</a>
 		</div>
 
-		<div class="sidebar"> Total CO2 of Vulcan </div>
+        <div class="sidebar"> Total CO2 of Vulcan 
+          <svg>
+        <g id="test">
+            <path d="M150 0 L75 200 L225 200 Z"></path>
+        </g>
+      </svg>
+        </div>
 
 		<h1> This is CO2 emission of Vulcan at county level </h1>
     <div id="chart"></div>
@@ -65,11 +75,10 @@
 			.enter().append("svg:path")
 			.attr("class", dataco2 ? quantize : null)
 			.attr("d", path)
-            .attr("title", function(d, i) { return d.id; })
+            .attr("title", function(d, i) { return d.id; });
                         //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
-			.on("mouseover", mouseover );
+			//.on("mouseover", mouseover );
 			});
-            //$("#counties path[title]").tooltip();
 
 			d3.json("../usa_geo/us-states.json", function(json) {
 			states.selectAll("path")
@@ -78,11 +87,19 @@
 			.attr("d", path);
 			});
 
+     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
+ $(document).ready(function()
+ {
+     $('path').qtip({
+    content: { text: 'Support for SVG' }, 
+    position: { my: 'top left', at: 'bottom right' }
+    });
+     });
 
 			function mouseover(d, i) {
 				//d3.select(this).style("fill", "white");
 				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-				infotext.text("This is hopefully CO2 of "+dataco2[d.id]+" = "+dataco2[d.id]);
+				infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
 			}
 
 			function quantize(d) {

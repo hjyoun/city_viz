@@ -81,7 +81,7 @@ d3.json("../usa_geo/us-msa-centroids.json", function(mm) {
       .attr("title", function(d, i) { return d.name+' : '+d.value; });
       //.on("mouseover", mouseover );
 
-		$("#msas circle[title]").tooltip();
+	$("#msas circle[title]").tooltip();
 		//function mouseover(d, i) {
 				//infotext1.text("City:  "+d.name);
 				//infotext2.text("Total Emission: "+d.value);

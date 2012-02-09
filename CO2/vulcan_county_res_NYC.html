@@ -53,36 +53,31 @@
 			.attr("id", "counties")
 			.attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
 
-			var states = svg.append("svg:g")
-			.attr("id", "states");
-
-			d3.json("../usa_geo/us-counties.json", function(json) {
+			d3.json("../usa_geo/us-counties_NYC.json", function(json) {
 			counties.selectAll("path")
 			.data(json.features)
 			.enter().append("svg:path")
 			.attr("class", dataco2 ? quantize : null)
 			.attr("d", path)
+            .attr("transform", "scale(7)translate(-730,-130)")
 			.on("mouseover", mouseover );
 			});
-
-			d3.json("../usa_geo/us-states.json", function(json) {
-			states.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("d", path);
-			});
-
-			d3.json("vulcan_total_county.json", function(json) { dataco2 = json; });
+            
+            counties.selectAll("path").transition()
+			.attr("class", dataco2 ? quantize : "q3-9")
+            .attr("transform", "scale(2)translate(-600,10)");
+          
+			d3.json("vulcan_total_county_NY.json", function(json) { dataco2 = json; });
 			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
 			function mouseover(d, i) {
 				//d3.select(this).style("fill", "white");
 				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-				infotext.text("This is hopefully CO2 of "+dataco2[d.id]+" = "+dataco2[d.id]);
+				infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
 			}
 
 			function quantize(d) {
-			return "q" + Math.min(8, ~~(dataco2[d.id] * 9 / 7)) + "-9";
+			return "q" + Math.min(8, ~~(dataco2[d.id] * 9 / 9)) + "-9";
 			}
 		
 		</script>
