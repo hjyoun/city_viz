@@ -1,0 +1,9 @@
+1. Written using the D3 visualisation library. Suggested by Mike Bostock and inspired by a similar animation on Wikipedia.
+Requires a SVG-capable browser e.g. Mozilla Firefox, WebKit (Google Chrome, Safari &c.) or Internet Explorer 9+.
+
+2. License and Logo
+
+3. Adjustable Size of circle 
+
+4. Linking Circles to xyplot
+
