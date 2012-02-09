@@ -7,3 +7,4 @@ Requires a SVG-capable browser e.g. Mozilla Firefox, WebKit (Google Chrome, Safa
 
 4. Linking Circles to xyplot
 
+5. http://mbostock.github.com/d3/ex/cartogram.html Effective density
