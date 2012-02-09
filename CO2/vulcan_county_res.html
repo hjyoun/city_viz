@@ -28,8 +28,7 @@
         <div class="sidebar"> Total CO2 of Vulcan </div>
 
 		<h1> This is CO2 emission of Vulcan at county level </h1>
-    <div id="chart"></div>
-			<h2> Put the mouse over a county to see the name and value of county </h2>
+        <div id="chart"> </div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
@@ -42,18 +41,21 @@
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
+            var infobox = d3.select("body").append("svg")
+                .append("svg:rect")
+                .attr("x", 100)
+                .attr("y", 500)
+                .attr("width", 1000)
+                .attr("hight", 1000)
+                .attr("fill", "blue")
+                .attr("stroke", "blue");
+
             var infotext = svg.append("svg:text")
 				.attr("x", "100")
 				.attr("y", "495")
                 .attr("font-family", "Verdana")
                 .attr("font-size", "21")
                 .attr("text-anchor", "start");
-
-            var infobox = svg.append("svg:rect")
-                .attr("x", "10")
-                .attr("y", "10")
-                .attr("width, "100")
-                .attr("hight, "100");
 
 			var counties = svg.append("svg:g")
 			.attr("id", "counties")
@@ -71,6 +73,7 @@
                         //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
 			.on("mouseover", mouseover );
 			});
+
 
 			d3.json("../usa_geo/us-states.json", function(json) {
 			states.selectAll("path")
