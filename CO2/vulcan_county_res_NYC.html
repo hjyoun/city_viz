@@ -18,16 +18,36 @@
 	<div class="body">
 	<div class="content">
 		<div class="topbar">
-			<a href="./vulcan_county_total.html">Vulcan_total (county)</a>
-			<a href="./vulcan_county_res.html">Vulcan_residential (county)</a>
-			<a href="./vulcan_county_res_NYC.html">Vulcan_residential (NYC)</a>
-			<a href="./vulcan_county_trans.html">Vulcan_transportation (county)</a>
-			<a href="./vulcan_msa_total.html">Vulcan total (MSA)</a>
+			<a href="./vulcan_county_total.html"> County Level Data </a>
+			<a href="./vulcan_msa_total.html"> MSA level Data </a>
+			<a href="./data_akw.html"> About the data</a>
 		</div>
 
-		<div class="sidebar"> Total CO2 of Vulcan </div>
+        <div class="sidebar"> 
+          <br><br><br><br>
+          <ul> - Tonnes of carbon <br>&nbsp &nbsp per person </ul>
+            <ul> - At county level</ul>
+            <p><br>
+          <b>DATA List</b>
+          <li> <a href="./vulcan_county_total.html"> Total </a></li>
+          <li> <a href="./vulcan_county_res.html"> Residential </a></li>
+          <li> <a href="./vulcan_county_elecprod.html"> Electricity Production</a></li>
+          <li> <a href="./vulcan_county_res_elec.html"> Residential & Elec </a></li>
+          <li> <a href="./vulcan_county_res_NYC.html"> Residential (NYC)</a></li>
+          <li> <a href="./vulcan_county_res_elec_NYC.html"> Res & Elec (NYC)</a></li>
+          <li> <a href="./vulcan_county_trans_NYC.html"> Transport. (NYC)</a></li>
+          <li> <a href="./vulcan_county_trans.html"> Transportation </a></li>
+          <li> <a href="./vulcan_county_aircraft.html"> Aircraft </a></li>
+          <li> <a href="./vulcan_county_onroad.html"> On road </a></li>
+          <li> <a href="./vulcan_county_nonroad.html"> Non road </a></li>
+          <li> <a href="./vulcan_county_commerc.html"> Commecial </a></li>
+          <li> <a href="./vulcan_county_industry.html"> Industry </a></li>
+        </div>
 
-		<h1> CO2 emission of NYC</h1>
+		<h1 align="center"> CO2 emission Residential Sector </h1>
+        <div id="chart"> </div>
+        <div id="info"> </div>
+
     <div id="chart"></div>
     <div id="info"> </div>
     <script type="text/javascript">
@@ -40,10 +60,11 @@
 				.append("svg:svg");
 
             var infotext = svg.append("svg:text")
-				.attr("x", "270")
-				.attr("y", "240")
-                .attr("font-family", "Verdana")
+            	.attr("x", "330")
+				.attr("y", "55")
+                .attr("fill", "#0B6121")
                 .attr("font-size", "21")
+                .attr("font", "Helvetica Neue")
                 .attr("text-anchor", "start");
 
 			var counties = svg.append("svg:g")
@@ -61,12 +82,12 @@
               .on("mouseover", mouseover );
 			});
 
-            d3.json("vulcan_total_county.json", function(json) { 
+            d3.json("vulcan_county_residential.json", function(json) { 
                 dataco2 = json; 
                 counties.selectAll("path").transition()
                         .duration(300)
                         .attr("class", dataco2 ? quantize : null)
-                        .attr("transform", "scale(7)translate(-760,-140)");
+                        .attr("transform", "scale(7)translate(-750,-140)");
             });
 			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
@@ -83,7 +104,7 @@
 			}
 
 			function quantize(d) {
-			return "q" + Math.min(8, ~~(dataco2[d.id] * 12 / 9)) + "-9";
+			return "q" + Math.min(8, ~~(dataco2[d.id] * 44 / 9)) + "-9";
 			}
 		
 		</script>

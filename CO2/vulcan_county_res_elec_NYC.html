@@ -6,9 +6,9 @@
     <script type="text/javascript" src="../d3/d3.js"></script>
     <script type="text/javascript" src="../d3/d3.geo.js"></script>
     <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
     <link type="text/css" rel="stylesheet" href="choropleth.css"/>
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
+    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
     <script type="text/javascript" src="../qtip/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="../qtip/jquery.qtip.js"></script>
   </head>
@@ -17,10 +17,10 @@
 <body>
 	<div class="body">
 	<div class="content">
-		<div class="topbar">
-			<a href="./vulcan_county_total.html"> County Level Data </a>
-			<a href="./vulcan_msa_total.html"> MSA level Data </a>
-			<a href="./data_akw.html"> About the data</a>
+        <div class="topbar">
+        <a href="./vulcan_county_total.html"> County Level Data </a>
+        <a href="./vulcan_msa_total.html"> MSA level Data </a>
+        <a href="./data_akw.html"> About the data</a>
 		</div>
 
         <div class="sidebar"> 
@@ -44,24 +44,24 @@
           <li> <a href="./vulcan_county_industry.html"> Industry </a></li>
         </div>
 
-		<h1 align="center"> Transportation CO2 emission </h1>
+		<h1 align="center"> CO2 emission of Residence and Electricity Production </h1>
         <div id="chart"> </div>
         <div id="info"> </div>
+
+    <div id="chart"></div>
+    <div id="info"> </div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
 
-			d3.json("vulcan_county_transportation.json", function(json) { dataco2 = json; });
-			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
-
 			var path = d3.geo.path();
-
+            
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
             var infotext = svg.append("svg:text")
-				.attr("x", "400")
-				.attr("y", "45")
+            	.attr("x", "330")
+				.attr("y", "55")
                 .attr("fill", "#0B6121")
                 .attr("font-size", "21")
                 .attr("font", "Helvetica Neue")
@@ -71,45 +71,41 @@
 			.attr("id", "counties")
 			.attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
 
-			var states = svg.append("svg:g")
-			.attr("id", "states");
-
-			d3.json("../usa_geo/us-states.json", function(json) {
-			states.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("d", path);
+			d3.json("../usa_geo/us-counties_NYC.json", function(json) {
+              counties.selectAll("path")
+              .data(json.features)
+              .enter().append("svg:path")
+              .attr("class", dataco2 ? quantize : null)
+              .attr("d", path)
+              .attr("title", function(d, i) { return d.id; })
+              .attr("transform", "scale(1)translate(1,1)")
+              .on("mouseover", mouseover );
 			});
 
-			d3.json("../usa_geo/us-counties.json", function(json) {
-			counties.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("class", dataco2 ? quantize : null)
-			.attr("d", path)
-                        //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
-			.on("mouseover", mouseover );
-			});
+            d3.json("vulcan_county_res_elec.json", function(json) { 
+                dataco2 = json; 
+                counties.selectAll("path").transition()
+                        .duration(300)
+                        .attr("class", dataco2 ? quantize : null)
+                        .attr("transform", "scale(7)translate(-750,-140)");
+            });
+			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
+             $(document).ready(function() {
+                 $('#county').qtip({
+                    content: { text: 'Support for SVG' }, 
+                    position: { my: 'top left', at: 'bottom right' }
+                    });
+             });
 
+			function mouseover(d, i) {
+				//d3.select(this).style("fill", "white");
+				infotext.text(dataname[d.id]+": "+dataco2[d.id]+" Tons");
+			}
 
-     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
-      $(document).ready(function()
-      {
-      $('path').qtip({
-      content: { text: 'Support for SVG' }, 
-      position: { my: 'top left', at: 'bottom right' }
-      });
-      });
-
-      function mouseover(d, i) {
-          //d3.select(this).style("fill", "blue");
-          infotext.text(dataname[d.id]+": "+dataco2[d.id]+" tonnes");
-      }
-
-      function quantize(d) {
-      return "q" + Math.min(8, ~~(dataco2[d.id] * 20 / 7)) + "-9";
-      }
+			function quantize(d) {
+			return "q" + Math.min(8, ~~(dataco2[d.id] * 22 / 9)) + "-9";
+			}
 		
 		</script>
   </body>

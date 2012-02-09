@@ -18,23 +18,40 @@
 	<div class="body">
 	<div class="content">
 		<div class="topbar">
-			<a href="./vulcan_county_total.html">Vulcan_total (county)</a>
-			<a href="./vulcan_county_res.html">Vulcan_residential (county)</a>
-			<a href="./vulcan_county_res_NYC.html">Vulcan_residential (NYC)</a>
-			<a href="./vulcan_county_trans.html">Vulcan_transportation (county)</a>
-			<a href="./vulcan_msa_total.html">Vulcan total (MSA)</a>
+			<a href="./vulcan_county_total.html"> County Level Data </a>
+			<a href="./vulcan_msa_total.html"> MSA level Data </a>
+			<a href="./data_akw.html"> About the data</a>
 		</div>
 
-        <div class="sidebar"> Total CO2 of Vulcan </div>
+        <div class="sidebar"> 
+          <br><br><br><br>
+          <ul> - Tonnes of carbon <br>&nbsp &nbsp per person </ul>
+            <ul> - At county level</ul>
+            <p><br>
+          <b>DATA List</b>
+          <li> <a href="./vulcan_county_total.html"> Total </a></li>
+          <li> <a href="./vulcan_county_res.html"> Residential </a></li>
+          <li> <a href="./vulcan_county_elecprod.html"> Electricity Production</a></li>
+          <li> <a href="./vulcan_county_res_elec.html"> Residential & Elec </a></li>
+          <li> <a href="./vulcan_county_res_NYC.html"> Residential (NYC)</a></li>
+          <li> <a href="./vulcan_county_res_elec_NYC.html"> Res & Elec (NYC)</a></li>
+          <li> <a href="./vulcan_county_trans_NYC.html"> Transport. (NYC)</a></li>
+          <li> <a href="./vulcan_county_trans.html"> Transportation </a></li>
+          <li> <a href="./vulcan_county_aircraft.html"> Aircraft </a></li>
+          <li> <a href="./vulcan_county_onroad.html"> On road </a></li>
+          <li> <a href="./vulcan_county_nonroad.html"> Non road </a></li>
+          <li> <a href="./vulcan_county_commerc.html"> Commecial </a></li>
+          <li> <a href="./vulcan_county_industry.html"> Industry </a></li>
+        </div>
 
-		<h1 align="center"> CO2 emission of Vulcan at county level </h1>
+		<h1 align="center"> Residential CO2 emission </h1>
         <div id="chart"> </div>
         <div id="info"> </div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
 
-			d3.json("vulcan_total_county.json", function(json) { dataco2 = json; });
+			d3.json("vulcan_county_residential.json", function(json) { dataco2 = json; });
 			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
 			var path = d3.geo.path();
@@ -43,10 +60,11 @@
 				.append("svg:svg");
 
             var infotext = svg.append("svg:text")
-				.attr("x", "220")
-				.attr("y", "495")
-                .attr("font-family", "Verdana")
+				.attr("x", "400")
+				.attr("y", "45")
+                .attr("fill", "#0B6121")
                 .attr("font-size", "21")
+                .attr("font", "Helvetica Neue")
                 .attr("text-anchor", "start");
 
 			var counties = svg.append("svg:g")
@@ -75,24 +93,22 @@
 
 
 
-     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
- $(document).ready(function()
- {
-     $('path').qtip({
-    content: { text: 'Support for SVG' }, 
-    position: { my: 'top left', at: 'bottom right' }
+    // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
+    $(document).ready(function() {
+      $('path').qtip({
+      content: { text: 'Support for SVG' }, 
+      position: { my: 'top left', at: 'bottom right' } });
     });
-     });
 
-			function mouseover(d, i) {
-				//d3.select(this).style("fill", "blue");
-				infotext.text(dataname[d.id]+": "+dataco2[d.id]+" Tons");
-			}
+    function mouseover(d, i) {
+        //d3.select(this).style("fill", "blue");
+        infotext.text(dataname[d.id]+": "+dataco2[d.id]+" tonnes");
+    }
 
-			function quantize(d) {
-			return "q" + Math.min(8, ~~(dataco2[d.id] * 9 / 7)) + "-9";
-			}
-		
-		</script>
+    function quantize(d) {
+    return "q" + Math.min(8, ~~(dataco2[d.id] * 29 / 7)) + "-9";
+    }
+          
+    </script>
   </body>
 </html>

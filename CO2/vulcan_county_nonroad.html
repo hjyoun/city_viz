@@ -2,32 +2,31 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-    <title> CO2 emission by MSA </title>
+    <title>U.S. CO2 emission by County</title>
     <script type="text/javascript" src="../d3/d3.js"></script>
     <script type="text/javascript" src="../d3/d3.geo.js"></script>
-    <script type="text/javascript" src="../d3/d3.geom.js"></script>
-    <script type="text/javascript" src="../d3/d3.layout.js"></script>
     <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
     <link type="text/css" rel="stylesheet" href="choropleth.css"/>
-    <link type="text/css" rel="stylesheet" href="dorling.css"/>
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
+    <script type="text/javascript" src="../qtip/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="../qtip/jquery.qtip.js"></script>
   </head>
-	<style> @import url("../style.css?1.10.0"); 
-	</style>
+	<style> @import url("../style.css?1.10.0"); </style>
 	</head>
 <body>
 	<div class="body">
 	<div class="content">
-        <div class="topbar">
-          <a href="./vulcan_county_total.html"> County Level Data </a>
-          <a href="./vulcan_msa_total.html"> MSA level Data </a>
-          <a href="./data_akw.html"> About the data</a>
-        </div>
+		<div class="topbar">
+			<a href="./vulcan_county_total.html"> County Level Data </a>
+			<a href="./vulcan_msa_total.html"> MSA level Data </a>
+			<a href="./data_akw.html"> About the data</a>
+		</div>
 
         <div class="sidebar"> 
           <br><br><br><br>
-          <ul> - Total Tonnes of carbon </ul>
-          <ul> - At MSA level</ul>
+          <ul> - Tonnes of carbon <br>&nbsp &nbsp per person </ul>
+            <ul> - At county level</ul>
             <p><br>
           <b>DATA List</b>
           <li> <a href="./vulcan_county_total.html"> Total </a></li>
@@ -45,40 +44,35 @@
           <li> <a href="./vulcan_county_industry.html"> Industry </a></li>
         </div>
 
-    <h1 align="center"> CO2 emission in tonnes at MSA level </h1>
-
-    <div id="chart"></div>
-
-    <h3 style="color:#6E6E6E"> Put your mouse over a MSA to see its name and value </h3>
-    <script type="text/javascript" src="dorling.js"></script>
-
+		<h1 align="center"> CO2 emission by non road</h1>
+        <div id="chart"> </div>
+        <div id="info"> </div>
     <script type="text/javascript">
-			//var dataco2; // loaded asynchronously
-			//var dataname; // loaded asynchronously
+			var dataco2; // loaded asynchronously
+			var dataname; // loaded asynchronously
+
+			d3.json("vulcan_county_nonroad.json", function(json) { dataco2 = json; });
+			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
 			var path = d3.geo.path();
 
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
+            var infotext = svg.append("svg:text")
+				.attr("x", "400")
+				.attr("y", "45")
+                .attr("fill", "#0B6121")
+                .attr("font-size", "21")
+                .attr("font", "Helvetica Neue")
+                .attr("text-anchor", "start");
+
 			var counties = svg.append("svg:g")
 			.attr("id", "counties")
 			.attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
 
-			var msa = svg.append("svg:g")
-				.attr("id", "msas");
-
 			var states = svg.append("svg:g")
 			.attr("id", "states");
-
-			d3.json("../usa_geo/us-counties.json", function(json) {
-			counties.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			//.attr("class", dataco2 ? quantize : null)
-			.attr("fill", "gray")
-			.attr("d", path);
-			});
 
 			d3.json("../usa_geo/us-states.json", function(json) {
 			states.selectAll("path")
@@ -87,10 +81,36 @@
 			.attr("d", path);
 			});
 
-			//d3.json("vulcan_total.json", function(json) { dataco2 = json; });
-			//d3.json("county_name.json", function(json) { dataname = json; });
+			d3.json("../usa_geo/us-counties.json", function(json) {
+			counties.selectAll("path")
+			.data(json.features)
+			.enter().append("svg:path")
+			.attr("class", dataco2 ? quantize : null)
+			.attr("d", path)
+                        //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
+			.on("mouseover", mouseover );
+			});
 
+
+
+     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
+      $(document).ready(function()
+      {
+      $('path').qtip({
+      content: { text: 'Support for SVG' }, 
+      position: { my: 'top left', at: 'bottom right' }
+      });
+      });
+
+      function mouseover(d, i) {
+          //d3.select(this).style("fill", "blue");
+          infotext.text(dataname[d.id]+": "+dataco2[d.id]+" tonnes");
+      }
+
+      function quantize(d) {
+      return "q" + Math.min(8, ~~(dataco2[d.id] * 18 / 7)) + "-9";
+      }
 		
-		</script>
+    </script>
   </body>
 </html>
