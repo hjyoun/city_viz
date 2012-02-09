@@ -25,20 +25,11 @@
 			<a href="./vulcan_msa_total.html">Vulcan total (MSA)</a>
 		</div>
 
-        <div class="sidebar"> Total CO2 of Vulcan 
-          <svg>
-        <g id="test">
-            <path d="M150 0 L75 200 L225 200 Z"></path>
-        </g>
-      </svg>
-        </div>
+        <div class="sidebar"> Total CO2 of Vulcan </div>
 
 		<h1> This is CO2 emission of Vulcan at county level </h1>
     <div id="chart"></div>
 			<h2> Put the mouse over a county to see the name and value of county </h2>
-    <div id="info">
-			Here is information:
-		</div>
     <script type="text/javascript">
 			var dataco2; // loaded asynchronously
 			var dataname; // loaded asynchronously
@@ -48,19 +39,21 @@
 
 			var path = d3.geo.path();
 
-			var infosvg = d3.select("#info")
-				.append("svg:svg")
-				.attr("width", "10cm")
-				.attr("height", "10cm");
-
-			var infotext = infosvg.append("svg:text")
-				.attr("x", "20")
-				.attr("y", "20")
-				.attr("text-anchor", "start");
-				//.text("Hello");
-
 			var svg = d3.select("#chart")
 				.append("svg:svg");
+
+            var infotext = svg.append("svg:text")
+				.attr("x", "100")
+				.attr("y", "495")
+                .attr("font-family", "Verdana")
+                .attr("font-size", "21")
+                .attr("text-anchor", "start");
+
+            var infobox = svg.append("svg:rect")
+                .attr("x", "10")
+                .attr("y", "10")
+                .attr("width, "100")
+                .attr("hight, "100");
 
 			var counties = svg.append("svg:g")
 			.attr("id", "counties")
@@ -75,9 +68,8 @@
 			.enter().append("svg:path")
 			.attr("class", dataco2 ? quantize : null)
 			.attr("d", path)
-            .attr("title", function(d, i) { return d.id; });
                         //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
-			//.on("mouseover", mouseover );
+			.on("mouseover", mouseover );
 			});
 
 			d3.json("../usa_geo/us-states.json", function(json) {
@@ -99,7 +91,7 @@
 			function mouseover(d, i) {
 				//d3.select(this).style("fill", "white");
 				//infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
-				infotext.text("This is hopefully CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
+				infotext.text("CO2 of "+dataname[d.id]+" = "+dataco2[d.id]);
 			}
 
 			function quantize(d) {
