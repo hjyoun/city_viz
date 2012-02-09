@@ -41,8 +41,7 @@
 			var svg = d3.select("#chart")
 				.append("svg:svg");
 
-            var infobox = d3.select("body").append("svg")
-                .append("svg:rect")
+            var infobox = svg.append("svg:rect")
                 .attr("x", 100)
                 .attr("y", 500)
                 .attr("width", 1000)
