@@ -6,13 +6,9 @@
     <script type="text/javascript" src="../d3/d3.js"></script>
     <script type="text/javascript" src="../d3/d3.geo.js"></script>
     <script type="text/javascript" src="../d3/d3.geom.js"></script>
-    <link type="text/css" rel="stylesheet" href="cartogram.css"/>
     <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
-    <link type="text/css" rel="stylesheet" href="choropleth.css"/>
+    <link type="text/css" rel="stylesheet" href="cartogram.css"/>
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
-    <script type="text/javascript" src="../qtip/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="../qtip/jquery.qtip.js"></script>
   </head>
 	<style> @import url("../style.css?1.10.0"); </style>
 	</head>
@@ -20,8 +16,8 @@
 	<div class="body">
 	<div class="content">
         <div class="topbar">
-                <a href="./vulcan_county_total.html"> County Level Data </a>
-                <a href="./vulcan_msa_total.html"> MSA level Data </a>
+                <a href="./vulcan_county_total.html"> State Data </a>
+                <a href="./vulcan_msa_total.html"> MSA Data </a>
                 <a href="./data_akw.html"> About the data</a>
         </div>
 
@@ -80,11 +76,11 @@
               x = centroid[0],
               y = centroid[1];
               return "translate(" + x + "," + y + ")"
-              + "scale(" + Math.sqrt(data[+d.id] * 2 || 0) + ")"
+              + "scale(" + Math.sqrt(data[+d.id] * 5 || 0) + ")"
               + "translate(" + -x + "," + -y + ")";
               })
           .style("stroke-width", function(d) {
-              return 1 / Math.sqrt(data[+d.id] * 2 || 1);
+              return 1 / Math.sqrt(data[+d.id] * 5 || 1);
           });
         });
 
