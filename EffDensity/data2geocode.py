@@ -10,7 +10,7 @@ fm = "{"
 for i in fo:
     name, nominal, effd1, effd2, effd3 = i.split()[0:5]
     code = name2code[name]
-    fm = fm + '"'+code+'":'+effd3+','
+    fm = fm + '"'+code+'":'+nominal+','
 
 fm = fm + '}'
 print fm
