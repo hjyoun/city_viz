@@ -36,7 +36,7 @@
 		var dataeffd; // loaded asynchronously
 		//var datanominal; // loaded asynchronously
         //var dataname; // loaded asynchronously
-        d3.json("./state_effD.json", function(json) { dataeffd = json; });
+        d3.json("./state_effD2.json", function(json) { dataeffd = json; });
     var data = [
   , .187, .198, , .133, .175, .151, , .1, .125, .171, , .172, .133, , .108,
   .142, .167, .201, .175, .159, .169, .177, .141, .163, .117, .182, .153, .195,
@@ -47,6 +47,14 @@
         var viz = d3.select("#chart").append("svg:svg")
                     .attr("width", 960)
                     .attr("height", 500);
+
+        var infotext = viz.append("svg:text")
+                    .attr("x", "400")
+                    .attr("y", "45")
+                    .attr("fill", "#0B6121")
+                    .attr("font-size", "21")
+                    .attr("font", "Helvetica Neue")
+                    .attr("text-anchor", "start");
 
         d3.json("../usa_geo/us-states-contiguous.json", function(json) {
             var path = d3.geo.path();
@@ -78,12 +86,13 @@
                 x = centroid[0],
                 y = centroid[1];
                 return "translate(" + x + "," + y + ")"
-                + "scale(" + Math.sqrt(dataeffd[+d.id] * 5 || 0) + ")"
+                + "scale(" + Math.sqrt(Math.sqrt(dataeffd[+d.id] * 0.0002 || 0)) + ")"
                 + "translate(" + -x + "," + -y + ")";
                 })
             .style("stroke-width", function(d) {
-                return 1 / Math.sqrt(data[+d.id] * 5 || 1);
-            });
+                return 1 / Math.sqrt(Math.sqrt(dataeffd[+d.id] * 0.0002 || 1));
+            })
+            .on("mouseover", mouseover );
         });
 
 
@@ -96,10 +105,11 @@
       //});
     //});
 
-    //function mouseover(d, i) {
+    function mouseover(d, i) {
         ////d3.select(this).style("fill", "blue");
-        //infotext.text(dataname[d.id]+": "+dataco2[d.id]+" tonnes");
-    //}
+        //infotext.text(d["properties"]["name"]+": "+dataco2[d.id]+" tonnes");
+      infotext.text(d["properties"]["name"]+": "+dataeffd[d.id]);
+    }
 
     //function quantize(d) {
     //return "q" + Math.min(8, ~~(Math.sqrt(dataco2[d.id]) * 12 / 7)) + "-9";
