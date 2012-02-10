@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title> Effective Density </title>
+    <script type="text/javascript" src="../d3/d3.js"></script>
+    <script type="text/javascript" src="../d3/d3.geo.js"></script>
+    <script type="text/javascript" src="../d3/d3.geom.js"></script>
+    <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="cartogram.css"/>
+    <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
+	<style> @import url("../style.css?1.10.0"); </style>
+	</head>
+<body>
+	<div class="content">
+	<div class="topbar">
+	  <a href="./index.html"> State Data </a>
+	  <a href="./vulcan_msa_total.html"> MSA Data </a>
+	  <a href="./data_akw.html"> About the data</a>
+	</div>
+
+	<div class="sidebar"> 
+	  <br><br><br><br>
+	  <ul> - Effective Density  </ul>
+	  <ul> - At state level</ul>
+	  <p><br>
+	  <b>DATA List</b>
+	  <li> <a href="./effdensity_state.html"> Effective Density </a></li>
+	  <li> <a href="./effdensity_state2.html"> Effective Density (twice) </a></li>
+	  <li> <a href="./effdensity_state3.html"> Effective Density (triple)</a></li>
+	  <li> <a href="./nominaldensity_state.html"> Nominal Density </a></li>
+	</div>
+
+	<h1 align="center"> Nominal Density </h1>
+	<div id="chart"> </div>
+
+<script type="text/javascript">
+	var dataeffd; // loaded asynchronously
+		//var datanominal; // loaded asynchronously
+	  //var dataname; // loaded asynchronously
+	  d3.json("./state_nominal.json", function(json) { dataeffd = json; });
+
+	var viz = d3.select("#chart").append("svg:svg")
+			.attr("width", 960)
+            .attr("height", 500);
+
+	var infotext = viz.append("svg:text")
+				.attr("x", "400")
+				.attr("y", "45")
+				.attr("fill", "#0B6121")
+				.attr("font-size", "21")
+				.attr("font", "Helvetica Neue")
+				.attr("text-anchor", "start");
+
+	d3.json("../usa_geo/us-states-contiguous.json", function(json) {
+		var path = d3.geo.path();
+		// A thick black stroke for the exterior.
+		viz.append("svg:g")
+		  .attr("class", "black")
+		.selectAll("path")
+		  .data(json.features)
+		.enter().append("svg:path")
+		  .attr("d", path);
+
+		  // A white overlay to hide interior black strokes.
+		viz.append("svg:g")
+			.attr("class", "white")
+		  .selectAll("path")
+			.data(json.features)
+		  .enter().append("svg:path")
+			.attr("d", path);
+
+		  // The polygons, scaled!
+		viz.append("svg:g")
+		.attr("class", "Reds")
+		.selectAll("path")
+		.data(json.features)
+		.enter().append("svg:path")
+		.attr("d", path)
+		.attr("transform", function(d) {
+			var centroid = path.centroid(d),
+			x = centroid[0],
+			y = centroid[1];
+			return "translate(" + x + "," + y + ")"
+			+ "scale(" + (Math.sqrt(Math.min(dataeffd[d.id], 210)) * 0.09  || 0) + ")"
+			+ "translate(" + -x + "," + -y + ")";
+			})
+		.style("stroke-width", function(d) {
+			return 1 / ( Math.sqrt(Math.min(dataeffd[d.id], 210)) * 0.09 || 0.5);
+		})
+		.attr("class", dataeffd? quantize : null)
+		.on("mouseover", mouseover );
+        });
+
+
+
+     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
+    //$(document).ready(function() {
+      //$('path').qtip({
+      //content: { text: 'Support for SVG' }, 
+      //position: { my: 'top left', at: 'bottom right' }
+      //});
+    //});
+
+    function mouseover(d, i) {
+        ////d3.select(this).style("fill", "blue");
+        //infotext.text(d["properties"]["name"]+": "+dataco2[d.id]+" tonnes");
+      infotext.text(d["properties"]["name"]+": "+dataeffd[d.id]);
+    }
+
+    function quantize(d) {
+    return "q" + Math.min(8, ~~( Math.sqrt(Math.min(dataeffd[d.id], 200)) * 4.5 / 7)) + "-9";
+    }
+		
+  </script>
+</div>
+</body>
+</html>

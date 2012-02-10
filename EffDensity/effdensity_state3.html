@@ -39,6 +39,12 @@
 		//var datanominal; // loaded asynchronously
         //var dataname; // loaded asynchronously
         d3.json("./state_effD2.json", function(json) { dataeffd = json; });
+    var data = [
+  , .187, .198, , .133, .175, .151, , .1, .125, .171, , .172, .133, , .108,
+  .142, .167, .201, .175, .159, .169, .177, .141, .163, .117, .182, .153, .195,
+  .189, .134, .163, .133, .151, .145, .13, .139, .169, .164, .175, .135, .152,
+  .169, , .132, .167, .139, .184, .159, .14, .146, .157, , .139, .183, .16, .143
+];
 
         var viz = d3.select("#chart").append("svg:svg")
                     .attr("width", 960)

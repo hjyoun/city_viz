@@ -26,7 +26,7 @@ a:hover {
 
 .content {
 	position: relative;
-	margin-left: 240px;
+	margin-left: 130px;
 }
 
 .content img {
@@ -36,8 +36,8 @@ a:hover {
 
 .sidebar {
 	position: absolute;
-	left: -140px;
-	width: 130px;
+	left: -120px;
+	width: 190px;
 	font-weight: 300;
 }
 
@@ -86,7 +86,7 @@ h1 {
 
 .sidebar li {
 	  white-space: nowrap;
-		width: 130px;
+		width: 150px;
 		overflow: hidden;
 		text-overflow: ellipsis;
 }
