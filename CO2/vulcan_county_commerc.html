@@ -6,11 +6,8 @@
     <script type="text/javascript" src="../d3/d3.js"></script>
     <script type="text/javascript" src="../d3/d3.geo.js"></script>
     <script src="http://cdn.jquerytools.org/1.2.6/jquery.tools.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="../qtip/jquery.qtip.css"/>
     <link type="text/css" rel="stylesheet" href="choropleth.css"/>
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
-    <script type="text/javascript" src="../qtip/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="../qtip/jquery.qtip.js"></script>
   </head>
 	<style> @import url("../style.css?1.10.0"); </style>
 	</head>
@@ -46,13 +43,10 @@
 
 		<h1 align="center"> Commercial CO2 emission </h1>
         <div id="chart"> </div>
-        <div id="info"> </div>
     <script type="text/javascript">
-			var dataco2; // loaded asynchronously
-			var dataname; // loaded asynchronously
+			var g_dataco2; // loaded asynchronously
+			var g_dataname; // loaded asynchronously
 
-			d3.json("vulcan_county_commerc.json", function(json) { dataco2 = json; });
-			d3.json("../usa_geo/county_name.json", function(json) { dataname = json; });
 
 			var path = d3.geo.path();
 
@@ -82,33 +76,23 @@
 			});
 
 			d3.json("../usa_geo/us-counties.json", function(json) {
-			counties.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("class", dataco2 ? quantize : null)
-			.attr("d", path)
-                        //.attr("title", function(d, i) { return dataname[d.id]+' : '; });
-			.on("mouseover", mouseover );
-			});
-
-
-
-     // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
-      $(document).ready(function()
-      {
-      $('path').qtip({
-      content: { text: 'Support for SVG' }, 
-      position: { my: 'top left', at: 'bottom right' }
-      });
-      });
-
-      function mouseover(d, i) {
-          //d3.select(this).style("fill", "blue");
-          infotext.text(dataname[d.id]+": "+dataco2[d.id]+" tonnes");
-      }
+                d3.json("../usa_geo/county_name.json", function(dataname) { 
+                  g_dataname = dataname; 
+                  d3.json("vulcan_county_commerc.json", function(dataco2) { 
+                    g_dataco2 = dataco2; 
+                    counties.selectAll("path")
+                    .data(json.features)
+                    .enter().append("svg:path")
+                    .attr("class", dataco2 ? quantize : null)
+                    .attr("d", path)
+                    .attr("title", function(d, i) { return dataname[d.id]+'<dd>'+parseFloat(dataco2[d.id]).toFixed(2)+" tonnes</dd>"; });
+                    $("#counties path[title]").tooltip();
+			      });
+                });
+             });
 
       function quantize(d) {
-      return "q" + Math.min(8, ~~(dataco2[d.id] * 18 / 7)) + "-9";
+      return "q" + Math.min(8, ~~(g_dataco2[d.id] * 18 / 7)) + "-9";
       }
 		
     </script>

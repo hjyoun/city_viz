@@ -13,6 +13,15 @@
     <link type="text/css" rel="stylesheet" href="../d3/lib/colorbrewer/colorbrewer.css"/>
   </head>
 	<style> @import url("../style.css?1.10.0"); 
+          .tooltip {
+            display:none;
+            background:transparent url("../img/tooltip/black_arrow2.png");
+            font-size:12px;
+            height:85px;
+            width:190px;
+            padding:20px;
+            color:#fff;	
+          }
 	</style>
 	</head>
 <body>
@@ -50,47 +59,43 @@
     <div id="chart"></div>
 
     <h3 style="color:#6E6E6E"> Put your mouse over a MSA to see its name and value </h3>
-    <script type="text/javascript" src="dorling.js"></script>
+    <script type="text/javascript" src="vulcan_msa_total_dorling.js"></script>
 
     <script type="text/javascript">
-			//var dataco2; // loaded asynchronously
-			//var dataname; // loaded asynchronously
+        //var dataco2; // loaded asynchronously
+        //var dataname; // loaded asynchronously
 
-			var path = d3.geo.path();
+        var path = d3.geo.path();
 
-			var svg = d3.select("#chart")
-				.append("svg:svg");
+        var svg = d3.select("#chart")
+                .append("svg:svg");
 
-			var counties = svg.append("svg:g")
-			.attr("id", "counties")
-			.attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
+        var counties = svg.append("svg:g")
+        .attr("id", "counties")
+        .attr("class", "Blues"); // class file can be found in "../lib/colorbrewer/colorbrewer.css"
 
-			var msa = svg.append("svg:g")
-				.attr("id", "msas");
+        var msa = svg.append("svg:g")
+                .attr("id", "msas");
 
-			var states = svg.append("svg:g")
-			.attr("id", "states");
+        var states = svg.append("svg:g")
+        .attr("id", "states");
 
-			d3.json("../usa_geo/us-counties.json", function(json) {
-			counties.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			//.attr("class", dataco2 ? quantize : null)
-			.attr("fill", "gray")
-			.attr("d", path);
-			});
+        d3.json("../usa_geo/us-counties.json", function(json) {
+        counties.selectAll("path")
+        .data(json.features)
+        .enter().append("svg:path")
+        //.attr("class", dataco2 ? quantize : null)
+        .attr("fill", "gray")
+        .attr("d", path);
+        });
 
-			d3.json("../usa_geo/us-states.json", function(json) {
-			states.selectAll("path")
-			.data(json.features)
-			.enter().append("svg:path")
-			.attr("d", path);
-			});
+        d3.json("../usa_geo/us-states.json", function(json) {
+        states.selectAll("path")
+        .data(json.features)
+        .enter().append("svg:path")
+        .attr("d", path);
+        });
 
-			//d3.json("vulcan_total.json", function(json) { dataco2 = json; });
-			//d3.json("county_name.json", function(json) { dataname = json; });
-
-		
-		</script>
+  </script>
   </body>
 </html>

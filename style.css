@@ -133,10 +133,10 @@ button:hover {
 /* tooltip styling. by default the element to be styled is .tooltip  */
 .tooltip {
 	display:none;
-	background:transparent url("./img/tooltip/black_arrow.png");
-	font-size:12px;
-	height:70px;
-	width:160px;
-	padding:25px;
+	background:transparent url("./img/tooltip/black_arrow0.png");
+	font-size:13px;
+	height:50px;
+	width:140px;
+	padding:20px;
 	color:#fff;	
 }
